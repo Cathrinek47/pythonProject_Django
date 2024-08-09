@@ -19,6 +19,12 @@ class Task(models.Model):
     def __str__(self):
         return f'Задача для выполнения: {self.title}'
 
+    class Meta:
+        db_table = 'task_manager_task'
+        ordering = ['-create_at']
+        verbose_name = 'Task'
+        unique_together = ['title']
+
 
 class SubTask(models.Model):
     STATUSES_CHOICES = [
@@ -40,6 +46,13 @@ class SubTask(models.Model):
         return f'Отдельная часть основной задачи: {self.title}'
 
 
+    class Meta:
+        db_table = 'task_manager_subtask'
+        ordering = ['-create_at']
+        verbose_name = 'Subtask'
+        unique_together = ['title']
+
+
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
@@ -49,3 +62,14 @@ class Category(models.Model):
 
     def __str__(self):
         return f'Категория выполнения: {self.name}'
+
+    class Meta:
+        db_table = 'task_manager_category'
+        verbose_name = 'Category'
+        unique_together = ['name']
+
+class Tag(models.Model):
+    title = models.CharField(max_length=25)
+
+    def __str__(self):
+        return self.title

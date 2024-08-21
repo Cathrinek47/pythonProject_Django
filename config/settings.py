@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'new_app.apps.NewAppConfig',
     'library.apps.LibraryConfig',
     'task_manager.apps.TaskManagerConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

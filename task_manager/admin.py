@@ -8,18 +8,18 @@ from task_manager.models import *
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('title', 'status', 'deadline','create_at')
+    list_display = ('title', 'status', 'deadline','created_at')
     search_fields = ('title',)
     list_filter = ('status', 'categories')
-    ordering = ('-create_at',)
+    ordering = ('-created_at',)
 
 
 @admin.register(SubTask)
 class SubTaskAdmin(admin.ModelAdmin):
-    list_display = ('title', 'task', 'status', 'deadline', 'create_at')
+    list_display = ('title', 'task', 'status', 'deadline', 'created_at')
     search_fields = ('title', 'task__title')
     list_filter = ('status', 'task')
-    ordering = ('-create_at',)
+    ordering = ('-created_at',)
 
 
 @admin.register(Category)

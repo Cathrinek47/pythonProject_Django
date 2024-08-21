@@ -14,14 +14,14 @@ class Task(models.Model):
     categories = models.ManyToManyField('Category')
     status = models.CharField(max_length=50, null=True, choices=STATUSES_CHOICES, default='New')
     deadline = models.DateTimeField()
-    create_at = models.DateField(auto_now_add=True)
+    created_at = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return f'Задача для выполнения: {self.title}'
 
     class Meta:
         db_table = 'task_manager_task'
-        ordering = ['-create_at']
+        ordering = ['-created_at']
         verbose_name = 'Task'
         unique_together = ['title']
 
@@ -40,15 +40,14 @@ class SubTask(models.Model):
     task = models.ForeignKey('Task', null=True, on_delete=models.CASCADE)
     status = models.CharField(max_length=50, null=True, choices=STATUSES_CHOICES, default='New')
     deadline = models.DateTimeField()
-    create_at = models.DateField(auto_now_add=True)
+    created_at = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return f'Отдельная часть основной задачи: {self.title}'
 
-
     class Meta:
         db_table = 'task_manager_subtask'
-        ordering = ['-create_at']
+        ordering = ['-created_at']
         verbose_name = 'Subtask'
         unique_together = ['title']
 
@@ -67,6 +66,7 @@ class Category(models.Model):
         db_table = 'task_manager_category'
         verbose_name = 'Category'
         unique_together = ['name']
+
 
 class Tag(models.Model):
     title = models.CharField(max_length=25)

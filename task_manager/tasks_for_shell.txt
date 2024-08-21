@@ -1,0 +1,60 @@
+1 Создание записей:
+from task_manager.models import *
+>>> from datetime import datetime, timedelta
+>>> task1 = Task.objects.create(title='Prepare presentation', description = 'Prepare materials and slides for the presentation', status='New', deadline=datetime.now() + timedelta(days=3))
+
+>>> subtask1 = SubTask.objects.create(title = 'Gather information',  description = 'Prepare materials and slides for the presentation', status='New', deadline=datetime.now() + timedelta(days=2))
+>>> subtask2 = SubTask.objects.create(title = 'Create slides',  description = 'Create presentation slides', status='New', deadline=datetime.now() + timedelta(days=1))
+
+Связала с таской1 (сразу забыла)
+>>> subtask1 = SubTask.objects.update(task=task1)
+>>> subtask2 = SubTask.objects.update(task=task1)
+
+2 Чтение записей:
+>>> get_new_task = Task.objects.filter(status="New")
+>>> get_new_task
+<QuerySet [<Task: Задача для выполнения: Prepare presentation>]>
+
+from django.db.models import Q
+>>> get_done_subtasks = SubTask.objects.filter(Q(status="Done") & Q(deadline__lt=datetime.now()))
+>>> get_done_subtasks
+<QuerySet []>
+
+
+3
+
+3.1 Измените статус "Prepare presentation" на "In progress".
+>>> change_status1 = Task.objects.get(title='Prepare presentation')
+>>> print(change_status1.status)
+In progress
+>>> change_status1.status = "In_progress"
+>>> change_status1.save()
+>>> print(change_status1.status)
+In_progress
+
+3.2 Измените срок выполнения для "Gather information" на два дня назад.
+
+>>> deadline_changes = SubTask.objects.filter(title='Gather information').update(deadline=F('deadline') - timedelta(days=2))
+>>> deadline_changes = SubTask.objects.get(title='Gather information')
+>>> deadline_changes.deadline
+datetime.datetime(2024, 8, 9, 19, 17, 59, 288100, tzinfo=datetime.timezone.utc)
+
+
+3.3 Измените описание для "Create slides" на "Create and format presentation slides".
+>>> change_subtask_desc = SubTask.objects.get(title="Create slides")
+>>> change_subtask_desc.description = "Create and format presentation slides"
+>>> change_subtask_desc.save()
+>>> change_subtask_desc = SubTask.objects.filter(title="Create slides").values('title', 'description','status','deadline')
+>>> change_subtask_desc
+<QuerySet [{'title': 'Create slides', 'description': 'Create and format presentation slides', 'status': 'New', 'deadline': datetime.datetime(2024, 8, 12, 19, 19, 29, 386874, tzinfo=datetime.timezone.utc)}]>
+
+4
+>>> delete_task = Task.objects.get(title='Prepare presentation')
+>>> delete_task
+<Task: Задача для выполнения: Prepare presentation>
+>>> delete_task.delete()
+(3, {'task_manager.SubTask': 2, 'task_manager.Task': 1})
+
+
+
+

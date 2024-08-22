@@ -37,11 +37,11 @@ def task_detail_update_delete(request, pk):
         return Response({'error': 'Task not found'}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = serializers.TaskModelSerializer(task)
+        serializer = TaskModelSerializer(task)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     elif request.method == 'PUT':
-        serializer = serializers.TaskDetailSerializer(task, data=request.data)
+        serializer = TaskDetailSerializer(task, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -54,23 +54,23 @@ def task_detail_update_delete(request, pk):
 
 #2 Эндпойнт для получения списка задач с фильтрами и пагинацией
 
-# http://127.0.0.1:8000/tasks/sort/?status=new&deadline=2026-01-01
+# http://127.0.0.1:8000/tasks/status/?status=New&deadline=2026-01-01
 
 @api_view(['GET'])
-def get_tasks_filtered(self, request):
-        filters = {}
-        status = request.query_params.get('status')
-        deadline = request.query_params.get('deadline')
+def get_tasks_filtered(request):
+    filters = {}
+    status = request.query_params.get('status')
+    deadline = request.query_params.get('deadline')
 
-        if status:
-            filters['status'] = status
+    if status:
+        filters['status'] = status
 
-        if deadline:
-            filters['deadline'] = deadline
+    if deadline:
+        filters['deadline'] = deadline
 
-        tasks = Task.objects.filter(**filters)
-        serializer = TaskDetailSerializer(tasks, many=True)
-        return Response(serializer.data)
+    tasks = Task.objects.filter(**filters)
+    serializer = TaskDetailSerializer(tasks, many=True)
+    return Response(serializer.data)
 
 
 
